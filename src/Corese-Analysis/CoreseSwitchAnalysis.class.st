@@ -11,7 +11,16 @@ Class {
 	#package : 'Corese-Analysis'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'running' }
+CoreseSwitchAnalysis class >> run [
+	<script>
+
+	self new
+		run ;
+		yourself.
+]
+
+{ #category : 'running' }
 CoreseSwitchAnalysis >> allSwitches: aType [
 
 	| result |
@@ -33,7 +42,7 @@ CoreseSwitchAnalysis >> allSwitches: aType [
 	]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 CoreseSwitchAnalysis >> initializeSwitchPattern [
 
 	switchStatementPattern := (FASTJavaModel % {
@@ -44,4 +53,17 @@ CoreseSwitchAnalysis >> initializeSwitchPattern [
 		}
 	}) asMatcher.
 
+]
+
+{ #category : 'running' }
+CoreseSwitchAnalysis >> run [
+
+	| model |
+	model := MooseModel root allModels
+		detect: [ :m | m name = 'corese' ]
+		ifNone: [
+			self inform: 'Corese model not found'.
+			^self
+		].
+	self allSwitches: (model entityNamed: #'fr::inria::corese::core::Event')
 ]
